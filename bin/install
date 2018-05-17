@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-# make a temporary download directory with a cleanup hook
+# This is modeled after the asdf-hashicorp plugin:
+# https://github.com/Banno/asdf-hashicorp
+
 readonly TMP_DOWNLOAD_DIR="$(mktemp -d -t "asdf_ansible_XXXXXX")"
 trap 'rm -rf "${TMP_DOWNLOAD_DIR?}"' EXIT
 

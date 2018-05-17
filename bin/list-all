@@ -2,7 +2,7 @@
 
 
 # This is modeled after the asdf-postgres plugin:
-# https://github.com/smashedtoatoms/asdf-postgres/blob/master/bin/install
+# https://github.com/smashedtoatoms/asdf-postgres/
 
 
 versions_list=$(
