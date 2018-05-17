@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+# make a temporary download directory with a cleanup hook
+readonly TMP_DOWNLOAD_DIR="$(mktemp -d -t "asdf_ansible_XXXXXX")"
+trap 'rm -rf "${TMP_DOWNLOAD_DIR?}"' EXIT
+
+install_ansible() {
+  local install_type=$1
+  local version=$2
+  local install_path=$3
+
+  local -r download_url="$(get_download_url "${version}")"
+  local -r download_path="${TMP_DOWNLOAD_DIR}/$(get_filename "${version}")"
+
+  echo "install path: $bin_install_path"
+
+  echo "Downloading ansible version ${version} from ${download_url}"
+  if curl -fs "${download_url}" -o "${download_path}"; then
+    echo "Extracting ansible archive"
+    tar xfz "${download_path}" -C "${install_path}"  --strip 1
+  else
+    echo "Error: ansible version ${version} not found" >&2
+    exit 1
+  fi
+}
+
+get_filename () {
+  local -r version="$1"
+  echo "ansible-${version}.tar.gz"
+}
+
+get_download_url () {
+  local -r version="$1"
+  local -r filename="$(get_filename "${version}")"
+  echo "https://releases.ansible.com/ansible/${filename}"
+}
+
+install_ansible $ASDF_INSTALL_TYPE $ASDF_INSTALL_VERSION $ASDF_INSTALL_PATH
